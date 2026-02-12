@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data Model Competency - Home</title>
+    <style>
+        /* ============================================================
+           DATA MODEL COMPETENCY PORTAL - Design System
+           ============================================================ */
+        :root {
+            --primary: #1e3a5f;
+            --primary-light: #2d5a87;
+            --primary-lighter: #3d7ab5;
+            --accent: #0078d4;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --bg: #f5f7fa;
+            --bg-card: #ffffff;
+            --text: #323130;
+            --text-light: #605e5c;
+            --text-lighter: #a19f9d;
+            --border: #edebe9;
+            --shadow: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-hover: 0 4px 16px rgba(0,0,0,0.12);
+            --radius: 10px;
+            --radius-lg: 16px;
+            --transition: all 0.25s ease;
+            --font: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        .portal-nav {
+            background: var(--primary);
+            padding: 0 40px;
+            display: flex;
+            align-items: center;
+            height: 50px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        .portal-nav .logo {
+            color: white;
+            font-weight: 700;
+            font-size: 1.1em;
+            margin-right: 40px;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        .portal-nav .nav-links {
+            display: flex;
+            gap: 0;
+            list-style: none;
+            height: 100%;
+        }
+        .portal-nav .nav-links li { height: 100%; }
+        .portal-nav .nav-links a {
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            padding: 0 18px;
+            font-size: 0.9em;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            height: 100%;
+            transition: var(--transition);
+            border-bottom: 3px solid transparent;
+        }
+        .portal-nav .nav-links a:hover,
+        .portal-nav .nav-links a.active {
+            color: white;
+            background: rgba(255,255,255,0.1);
+            border-bottom-color: white;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 50%, var(--primary-lighter) 100%);
+            color: white;
+            padding: 70px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 60%;
+            height: 200%;
+            background: radial-gradient(ellipse, rgba(255,255,255,0.06) 0%, transparent 70%);
+        }
+        .hero h1 {
+            font-size: 2.8em;
+            font-weight: 700;
+            margin-bottom: 12px;
+            position: relative;
+        }
+        .hero .subtitle {
+            font-size: 1.25em;
+            opacity: 0.92;
+            margin-bottom: 8px;
+            position: relative;
+        }
+        .hero .tagline {
+            font-size: 1.05em;
+            opacity: 0.78;
+            margin-bottom: 35px;
+            position: relative;
+        }
+        .hero-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            position: relative;
+        }
+        .btn {
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95em;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+        }
+        .btn-white {
+            background: white;
+            color: var(--primary);
+        }
+        .btn-white:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255,255,255,0.7);
+        }
+        .btn-outline:hover { border-color: white; background: rgba(255,255,255,0.1); }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover { background: var(--primary-light); transform: translateY(-2px); }
+
+        /* Section */
+        .section {
+            padding: 50px 0;
+        }
+        .section-title {
+            font-size: 1.5em;
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary-light);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Quick Links Grid */
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            padding: 40px 0;
+        }
+        .quick-link-card {
+            text-align: center;
+            padding: 30px 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            transition: var(--transition);
+            text-decoration: none;
+            color: var(--text);
+        }
+        .quick-link-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--primary-light);
+        }
+        .quick-link-card .icon {
+            font-size: 2.5em;
+            margin-bottom: 12px;
+            display: block;
+        }
+        .quick-link-card h3 {
+            color: var(--primary);
+            margin-bottom: 6px;
+            font-size: 1.1em;
+        }
+        .quick-link-card p {
+            color: var(--text-light);
+            font-size: 0.88em;
+            margin-bottom: 12px;
+        }
+        .quick-link-card .link-arrow {
+            color: var(--primary-light);
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        /* Two Column Layout */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 30px;
+        }
+        @media (max-width: 800px) {
+            .two-col { grid-template-columns: 1fr; }
+        }
+
+        /* News Cards */
+        .news-card {
+            background: var(--bg);
+            padding: 20px;
+            border-radius: var(--radius);
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary-light);
+            transition: var(--transition);
+        }
+        .news-card:hover { box-shadow: var(--shadow); }
+        .news-card.green { border-left-color: var(--success); }
+        .news-card.yellow { border-left-color: var(--warning); }
+        .news-card h4 { margin-bottom: 6px; font-size: 1em; }
+        .news-card p { color: var(--text-light); font-size: 0.9em; margin-bottom: 4px; }
+        .news-card .date { font-size: 0.8em; color: var(--text-lighter); }
+
+        /* Project Cards */
+        .project-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 10px;
+            transition: var(--transition);
+        }
+        .project-item:hover { box-shadow: var(--shadow); border-color: var(--primary-light); }
+        .project-item .badge {
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .badge-active { background: #e6f4ea; color: #1e7e34; }
+        .badge-completed { background: #e8f0fe; color: #1967d2; }
+
+        /* Team Section */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .team-card {
+            text-align: center;
+            padding: 20px 15px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            transition: var(--transition);
+        }
+        .team-card:hover { box-shadow: var(--shadow); }
+        .team-card .avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-light), var(--primary-lighter));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4em;
+            font-weight: 700;
+            margin: 0 auto 10px;
+        }
+        .team-card .name { font-weight: 600; font-size: 0.95em; }
+        .team-card .role { color: var(--text-light); font-size: 0.82em; }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 50px 40px;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            margin: 20px 0 40px;
+        }
+        .cta-section h2 { color: var(--primary); margin-bottom: 12px; }
+        .cta-section p { color: var(--text-light); margin-bottom: 25px; font-size: 1.1em; }
+
+        /* Stats Row */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            padding: 30px 0;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            padding: 25px;
+            border-radius: var(--radius);
+            text-align: center;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+        .stat-card .number {
+            font-size: 2.2em;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .stat-card .label {
+            color: var(--text-light);
+            font-size: 0.88em;
+            margin-top: 4px;
+        }
+
+        /* Footer */
+        .portal-footer {
+            background: var(--primary);
+            color: rgba(255,255,255,0.7);
+            padding: 20px 40px;
+            text-align: center;
+            font-size: 0.85em;
+            margin-top: 40px;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-lighter);
+        }
+        .spinner {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero { padding: 40px 20px; }
+            .hero h1 { font-size: 2em; }
+            .container { padding: 0 15px; }
+            .portal-nav { padding: 0 15px; }
+            .portal-nav .nav-links a { padding: 0 10px; font-size: 0.82em; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="portal-nav">
+        <a href="Home.html" class="logo">Data Model Competency</a>
+        <ul class="nav-links">
+            <li><a href="Home.html" class="active">Home</a></li>
+            <li><a href="Showcase.html">Showcase</a></li>
+            <li><a href="Accelerators.html">Accelerators</a></li>
+            <li><a href="Knowledge.html">Knowledge</a></li>
+            <li><a href="Community.html">Community</a></li>
+            <li><a href="Metrics.html">Metrics</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1>Data Model Competency</h1>
+        <p class="subtitle">Center of Excellence for Data Modeling &amp; Architecture</p>
+        <p class="tagline">Accelerate delivery with AI-powered tools, reusable patterns, and expert guidance</p>
+        <div class="hero-actions">
+            <a href="Accelerators.html" class="btn btn-white">&#x1F680; Explore Accelerators</a>
+            <a href="Community.html" class="btn btn-outline">&#x1F4DD; Request Review</a>
+        </div>
+    </section>
+
+    <div class="container">
+
+        <!-- Quick Links -->
+        <div class="quick-links">
+            <a href="Showcase.html" class="quick-link-card">
+                <span class="icon">&#x1F3AF;</span>
+                <h3>Showcase</h3>
+                <p>Capabilities &amp; Projects</p>
+                <span class="link-arrow">View &rarr;</span>
+            </a>
+            <a href="Accelerators.html" class="quick-link-card">
+                <span class="icon">&#x26A1;</span>
+                <h3>Accelerators</h3>
+                <p>Patterns &amp; Templates</p>
+                <span class="link-arrow">View &rarr;</span>
+            </a>
+            <a href="Knowledge.html" class="quick-link-card">
+                <span class="icon">&#x1F4DA;</span>
+                <h3>Knowledge</h3>
+                <p>Guides &amp; Learning</p>
+                <span class="link-arrow">View &rarr;</span>
+            </a>
+            <a href="Community.html" class="quick-link-card">
+                <span class="icon">&#x1F465;</span>
+                <h3>Community</h3>
+                <p>Reviews &amp; Discussions</p>
+                <span class="link-arrow">View &rarr;</span>
+            </a>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-row" id="statsRow">
+            <div class="stat-card">
+                <div class="number" id="statPatterns">--</div>
+                <div class="label">Patterns Available</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="statProjects">--</div>
+                <div class="label">Projects Delivered</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="statTeam">--</div>
+                <div class="label">Team Members</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="statReviews">--</div>
+                <div class="label">Reviews Completed</div>
+            </div>
+        </div>
+
+        <!-- News & Recent Projects -->
+        <section class="section">
+            <div class="two-col">
+                <div>
+                    <h2 class="section-title">&#x1F4E2; News &amp; Announcements</h2>
+                    <div class="news-card">
+                        <h4>Data Model Competency Portal Launched!</h4>
+                        <p>Welcome to your new home for data modeling resources, patterns, and tools.</p>
+                        <span class="date">February 2026</span>
+                    </div>
+                    <div class="news-card green">
+                        <h4>New Pattern: Activity Schema</h4>
+                        <p>Modern event-driven analytics pattern now available in the pattern library.</p>
+                        <span class="date">February 2026</span>
+                    </div>
+                    <div class="news-card yellow">
+                        <h4>AI Model Generator Coming Soon</h4>
+                        <p>Generate complete data models from natural language descriptions - Phase 2.</p>
+                        <span class="date">Coming Q2 2026</span>
+                    </div>
+                </div>
+                <div>
+                    <h2 class="section-title">&#x1F3C6; Recent Projects</h2>
+                    <div id="recentProjects">
+                        <div class="loading"><div class="spinner"></div><p>Loading projects...</p></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Team Section -->
+        <section class="section">
+            <h2 class="section-title" style="text-align:center; justify-content:center;">&#x1F465; Our Team</h2>
+            <p style="text-align:center; color:var(--text-light); margin-bottom:25px;">Meet our data modeling experts and subject matter specialists</p>
+            <div class="team-grid" id="teamGrid">
+                <div class="loading"><div class="spinner"></div><p>Loading team...</p></div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <div class="cta-section">
+            <h2>Need Help with Your Data Model?</h2>
+            <p>Our experts are here to help with design reviews, pattern selection, and best practices</p>
+            <a href="Community.html" class="btn btn-primary">&#x1F4DD; Submit a Review Request</a>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="portal-footer">
+        Data Model Competency &ndash; Center of Excellence &bull; Data &amp; Insights Team &bull; Ascendion &bull; &copy; 2026
+    </footer>
+
+    <script type="text/javascript">
+        // ============================================================
+        // CONFIGURATION - Update this URL to match your SharePoint site
+        // ============================================================
+        var SITE_URL = _spPageContextInfo ? _spPageContextInfo.webAbsoluteUrl : '';
+
+        // Fallback: if running outside SharePoint context
+        if (!SITE_URL) {
+            // Try to detect from current URL
+            var loc = window.location.href;
+            var siteMatch = loc.match(/(https:\/\/[^/]+\/sites\/[^/]+\/[^/]+)/i);
+            if (siteMatch) SITE_URL = siteMatch[1];
+            else SITE_URL = 'https://ascendionhub.sharepoint.com/sites/DataNInsights2.0/DataModelCompetency';
+        }
+
+        // Helper: fetch from SharePoint REST API
+        function spGet(endpoint) {
+            return fetch(SITE_URL + '/_api/web/lists/getbytitle(\'' + endpoint + '\')/items?$top=100', {
+                headers: {
+                    'Accept': 'application/json;odata=verbose'
+                },
+                credentials: 'include'
+            }).then(function(r) { return r.json(); })
+              .then(function(d) { return d.d ? d.d.results : []; })
+              .catch(function() { return []; });
+        }
+
+        // Helper: get list item count
+        function spCount(listName) {
+            return fetch(SITE_URL + '/_api/web/lists/getbytitle(\'' + listName + '\')/itemcount', {
+                headers: { 'Accept': 'application/json;odata=verbose' },
+                credentials: 'include'
+            }).then(function(r) { return r.json(); })
+              .then(function(d) { return d.d ? d.d.ItemCount : 0; })
+              .catch(function() { return 0; });
+        }
+
+        // Load Stats
+        function loadStats() {
+            var lists = [
+                { id: 'statPatterns', list: 'Patterns' },
+                { id: 'statProjects', list: 'Projects' },
+                { id: 'statTeam', list: 'TeamMembers' },
+                { id: 'statReviews', list: 'ReviewRequests' }
+            ];
+            lists.forEach(function(item) {
+                spGet(item.list).then(function(results) {
+                    var el = document.getElementById(item.id);
+                    if (el) el.textContent = results.length || '0';
+                });
+            });
+        }
+
+        // Load Recent Projects
+        function loadProjects() {
+            spGet('Projects').then(function(results) {
+                var container = document.getElementById('recentProjects');
+                if (!results.length) {
+                    container.innerHTML = '<p style="color:var(--text-light); padding:15px;">No projects found. <a href="Showcase.html">View Showcase</a></p>';
+                    return;
+                }
+                var html = '';
+                results.slice(0, 5).forEach(function(p) {
+                    var statusClass = (p.Status === 'Active') ? 'badge-active' : 'badge-completed';
+                    html += '<div class="project-item">' +
+                        '<div style="flex:1"><strong>' + (p.Title || '') + '</strong>' +
+                        '<div style="font-size:0.85em;color:var(--text-light);">' + (p.Client || '') + ' &bull; ' + (p.Platform || '') + '</div></div>' +
+                        '<span class="badge ' + statusClass + '">' + (p.Status || '') + '</span></div>';
+                });
+                container.innerHTML = html;
+            });
+        }
+
+        // Load Team
+        function loadTeam() {
+            spGet('TeamMembers').then(function(results) {
+                var container = document.getElementById('teamGrid');
+                if (!results.length) {
+                    container.innerHTML = '<p style="color:var(--text-light); padding:15px;">Team directory coming soon.</p>';
+                    return;
+                }
+                var html = '';
+                results.forEach(function(t) {
+                    var name = t.Title || 'Team Member';
+                    var initials = name.split(' ').map(function(n){ return n[0]; }).join('').substring(0,2);
+                    html += '<div class="team-card">' +
+                        '<div class="avatar">' + initials + '</div>' +
+                        '<div class="name">' + name + '</div>' +
+                        '<div class="role">' + (t.Role || t.Expertise || '') + '</div></div>';
+                });
+                container.innerHTML = html;
+            });
+        }
+
+        // Initialize
+        try { loadStats(); loadProjects(); loadTeam(); } catch(e) { console.log('API load skipped:', e); }
+    </script>
+
+</body>
+</html>

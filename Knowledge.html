@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data Model Competency - Knowledge Base</title>
+    <style>
+        :root {
+            --primary: #1e3a5f; --primary-light: #2d5a87; --primary-lighter: #3d7ab5;
+            --accent: #0078d4; --success: #28a745; --warning: #ffc107;
+            --bg: #f5f7fa; --bg-card: #ffffff; --text: #323130;
+            --text-light: #605e5c; --text-lighter: #a19f9d; --border: #edebe9;
+            --shadow: 0 2px 8px rgba(0,0,0,0.08); --shadow-hover: 0 4px 16px rgba(0,0,0,0.12);
+            --radius: 10px; --radius-lg: 16px; --transition: all 0.25s ease;
+            --font: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; }
+        .portal-nav { background: var(--primary); padding: 0 40px; display: flex; align-items: center; height: 50px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+        .portal-nav .logo { color: white; font-weight: 700; font-size: 1.1em; margin-right: 40px; text-decoration: none; white-space: nowrap; }
+        .portal-nav .nav-links { display: flex; gap: 0; list-style: none; height: 100%; }
+        .portal-nav .nav-links li { height: 100%; }
+        .portal-nav .nav-links a { color: rgba(255,255,255,0.85); text-decoration: none; padding: 0 18px; font-size: 0.9em; font-weight: 500; display: flex; align-items: center; height: 100%; transition: var(--transition); border-bottom: 3px solid transparent; }
+        .portal-nav .nav-links a:hover, .portal-nav .nav-links a.active { color: white; background: rgba(255,255,255,0.1); border-bottom-color: white; }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 30px; }
+        .page-hero { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); color: white; padding: 50px 40px; position: relative; overflow: hidden; }
+        .page-hero::before { content: ''; position: absolute; top: -50%; right: -20%; width: 60%; height: 200%; background: radial-gradient(ellipse, rgba(255,255,255,0.06) 0%, transparent 70%); }
+        .page-hero h1 { font-size: 2.5em; margin-bottom: 10px; position: relative; }
+        .page-hero p { font-size: 1.2em; opacity: 0.9; position: relative; }
+        .section { padding: 40px 0; }
+        .section-title { font-size: 1.5em; color: var(--primary); border-bottom: 3px solid var(--primary-light); padding-bottom: 10px; margin-bottom: 25px; display: flex; align-items: center; gap: 10px; }
+
+        /* Topic Cards */
+        .topics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .topic-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; transition: var(--transition); }
+        .topic-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-3px); }
+        .topic-card h3 { color: var(--primary); margin-bottom: 15px; font-size: 1.1em; }
+        .topic-list { list-style: none; padding: 0; }
+        .topic-list li { padding: 7px 0; color: var(--text-light); font-size: 0.9em; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; gap: 8px; }
+        .topic-list li:last-child { border-bottom: none; }
+        .topic-list li .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--primary-light); flex-shrink: 0; }
+
+        /* Knowledge Cards */
+        .knowledge-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
+        .knowledge-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: var(--transition); }
+        .knowledge-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-3px); }
+        .knowledge-card-icon { background: linear-gradient(135deg, var(--primary-light), var(--primary-lighter)); color: white; padding: 20px; font-size: 2em; text-align: center; }
+        .knowledge-card-body { padding: 20px 22px; }
+        .knowledge-card-body h3 { color: var(--primary); margin-bottom: 8px; font-size: 1.05em; }
+        .knowledge-card-body p { color: var(--text-light); font-size: 0.9em; margin-bottom: 12px; }
+        .knowledge-card-body .meta { display: flex; gap: 6px; flex-wrap: wrap; }
+        .tag { padding: 3px 10px; border-radius: 12px; font-size: 0.75em; font-weight: 600; }
+        .tag-concept { background: #e8f0fe; color: #1967d2; }
+        .tag-platform { background: #e6f4ea; color: #1e7e34; }
+        .tag-practice { background: #fef7e0; color: #e37400; }
+
+        /* Comparison Table */
+        .compare-table { width: 100%; border-collapse: collapse; background: var(--bg-card); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); margin-bottom: 20px; }
+        .compare-table thead { background: var(--primary); color: white; }
+        .compare-table th { padding: 14px 16px; text-align: left; font-weight: 600; font-size: 0.9em; }
+        .compare-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 0.88em; }
+        .compare-table tr:hover td { background: #f8f9fa; }
+
+        /* Accordion */
+        .accordion { margin-bottom: 10px; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--bg-card); }
+        .accordion-header { padding: 16px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 600; color: var(--primary); transition: var(--transition); }
+        .accordion-header:hover { background: #f8f9fa; }
+        .accordion-header .chevron { transition: transform 0.3s; font-size: 0.8em; }
+        .accordion-header.open .chevron { transform: rotate(180deg); }
+        .accordion-body { padding: 0 20px; max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.4s ease; }
+        .accordion-body.open { max-height: 1000px; padding: 0 20px 20px; }
+        .accordion-body p { color: var(--text-light); font-size: 0.9em; line-height: 1.7; }
+        .accordion-body ul { color: var(--text-light); font-size: 0.9em; padding-left: 20px; }
+        .accordion-body ul li { padding: 3px 0; }
+
+        .loading { text-align: center; padding: 40px; color: var(--text-lighter); }
+        .spinner { display: inline-block; width: 24px; height: 24px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .portal-footer { background: var(--primary); color: rgba(255,255,255,0.7); padding: 20px 40px; text-align: center; font-size: 0.85em; margin-top: 40px; }
+
+        @media (max-width: 900px) { .topics-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) {
+            .page-hero { padding: 30px 20px; } .page-hero h1 { font-size: 1.8em; }
+            .container { padding: 0 15px; } .knowledge-grid { grid-template-columns: 1fr; }
+            .portal-nav { padding: 0 15px; } .portal-nav .nav-links a { padding: 0 10px; font-size: 0.82em; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="portal-nav">
+        <a href="Home.html" class="logo">Data Model Competency</a>
+        <ul class="nav-links">
+            <li><a href="Home.html">Home</a></li>
+            <li><a href="Showcase.html">Showcase</a></li>
+            <li><a href="Accelerators.html">Accelerators</a></li>
+            <li><a href="Knowledge.html" class="active">Knowledge</a></li>
+            <li><a href="Community.html">Community</a></li>
+            <li><a href="Metrics.html">Metrics</a></li>
+        </ul>
+    </nav>
+
+    <section class="page-hero">
+        <h1>&#x1F4DA; Knowledge Base</h1>
+        <p>Learn data modeling concepts, explore platform guides, and discover best practices</p>
+    </section>
+
+    <div class="container">
+
+        <!-- Topics Overview -->
+        <section class="section">
+            <div class="topics-grid">
+                <div class="topic-card">
+                    <h3>&#x1F4D6; Concepts</h3>
+                    <ul class="topic-list">
+                        <li><span class="dot"></span>Dimensional Modeling (Kimball)</li>
+                        <li><span class="dot"></span>Data Vault 2.0</li>
+                        <li><span class="dot"></span>Activity Schema</li>
+                        <li><span class="dot"></span>Graph Data Models</li>
+                        <li><span class="dot"></span>Data Mesh Architecture</li>
+                        <li><span class="dot"></span>Semantic Layer Design</li>
+                    </ul>
+                </div>
+                <div class="topic-card">
+                    <h3>&#x2601;&#xFE0F; Platforms</h3>
+                    <ul class="topic-list">
+                        <li><span class="dot"></span>Google BigQuery</li>
+                        <li><span class="dot"></span>Snowflake</li>
+                        <li><span class="dot"></span>Databricks / Delta Lake</li>
+                        <li><span class="dot"></span>Azure Synapse Analytics</li>
+                        <li><span class="dot"></span>Amazon Redshift</li>
+                        <li><span class="dot"></span>dbt (Data Build Tool)</li>
+                    </ul>
+                </div>
+                <div class="topic-card">
+                    <h3>&#x2B50; Best Practices</h3>
+                    <ul class="topic-list">
+                        <li><span class="dot"></span>Naming Conventions</li>
+                        <li><span class="dot"></span>Performance Tuning</li>
+                        <li><span class="dot"></span>Testing Strategies</li>
+                        <li><span class="dot"></span>Documentation Standards</li>
+                        <li><span class="dot"></span>Code Review Checklists</li>
+                        <li><span class="dot"></span>Versioning &amp; Migration</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pattern Comparison -->
+        <section class="section">
+            <h2 class="section-title">&#x1F504; Pattern Comparison Guide</h2>
+            <table class="compare-table">
+                <thead>
+                    <tr>
+                        <th>Aspect</th>
+                        <th>Star Schema</th>
+                        <th>Data Vault 2.0</th>
+                        <th>Activity Schema</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Best For</strong></td>
+                        <td>BI &amp; Analytics</td>
+                        <td>Enterprise Data Warehousing</td>
+                        <td>Event-Driven Analytics</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Complexity</strong></td>
+                        <td>Low-Medium</td>
+                        <td>High</td>
+                        <td>Medium</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Agility</strong></td>
+                        <td>Medium</td>
+                        <td>High (additive)</td>
+                        <td>High</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Query Performance</strong></td>
+                        <td>Excellent</td>
+                        <td>Good (with marts)</td>
+                        <td>Good</td>
+                    </tr>
+                    <tr>
+                        <td><strong>History Tracking</strong></td>
+                        <td>SCD Types</td>
+                        <td>Built-in (Satellites)</td>
+                        <td>Natural (events)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Source Integration</strong></td>
+                        <td>ETL-heavy</td>
+                        <td>Easy (hash keys)</td>
+                        <td>Stream-native</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Team Skill Required</strong></td>
+                        <td>BI / SQL</td>
+                        <td>DV Specialist</td>
+                        <td>Analytics Engineer</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Concept Deep Dives -->
+        <section class="section">
+            <h2 class="section-title">&#x1F4D6; Concept Deep Dives</h2>
+
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>Dimensional Modeling (Kimball Methodology)</span>
+                    <span class="chevron">&#x25BC;</span>
+                </div>
+                <div class="accordion-body">
+                    <p>Dimensional modeling, pioneered by Ralph Kimball, organizes data into <strong>fact tables</strong> (measurements/metrics) and <strong>dimension tables</strong> (context/descriptors). This creates a star-shaped schema optimized for analytical queries.</p>
+                    <br/>
+                    <p><strong>Key Principles:</strong></p>
+                    <ul>
+                        <li>Conformed dimensions shared across fact tables enable cross-process analysis</li>
+                        <li>Surrogate keys decouple from source systems and enable SCD tracking</li>
+                        <li>Grain definition is critical &ndash; one row = one measurement event</li>
+                        <li>Degenerate dimensions (order numbers) live in the fact table</li>
+                        <li>Bridge tables resolve many-to-many relationships</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>Data Vault 2.0</span>
+                    <span class="chevron">&#x25BC;</span>
+                </div>
+                <div class="accordion-body">
+                    <p>Data Vault 2.0 is a detail-oriented, historical tracking, and uniquely linked set of normalized tables that support one or more functional areas of business. It uses three core entity types:</p>
+                    <br/>
+                    <p><strong>Core Components:</strong></p>
+                    <ul>
+                        <li><strong>Hubs</strong> &ndash; Business keys (unique identifiers of business concepts)</li>
+                        <li><strong>Links</strong> &ndash; Associations/relationships between hubs</li>
+                        <li><strong>Satellites</strong> &ndash; Descriptive attributes with full history</li>
+                    </ul>
+                    <br/>
+                    <p><strong>Key Features:</strong></p>
+                    <ul>
+                        <li>SHA-256 hash keys for deterministic, parallel loading</li>
+                        <li>All timestamps in UTC for consistency</li>
+                        <li>Record source tracking in every satellite</li>
+                        <li>Additive architecture &ndash; never alter existing structures</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>Activity Schema Pattern</span>
+                    <span class="chevron">&#x25BC;</span>
+                </div>
+                <div class="accordion-body">
+                    <p>Activity Schema is a modern approach that models all business events as a single, wide activity stream. Each row represents something that happened (an activity) with associated entity references and attributes.</p>
+                    <br/>
+                    <p><strong>Structure:</strong></p>
+                    <ul>
+                        <li><strong>Activity Stream</strong> &ndash; Single wide table with: activity_id, entity_id, activity_type, timestamp, and feature columns</li>
+                        <li><strong>Entity Table</strong> &ndash; Enrichment data for the primary entity (customer, user, account)</li>
+                        <li>All analytics computed by filtering and aggregating the activity stream</li>
+                    </ul>
+                    <br/>
+                    <p><strong>Benefits:</strong></p>
+                    <ul>
+                        <li>Simple schema &ndash; just 2 tables for most use cases</li>
+                        <li>Natural event ordering and temporal queries</li>
+                        <li>Easy to add new activity types without schema changes</li>
+                        <li>Works well with modern columnar storage (BigQuery, Snowflake)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>Graph Data Models</span>
+                    <span class="chevron">&#x25BC;</span>
+                </div>
+                <div class="accordion-body">
+                    <p>Graph models represent data as <strong>nodes</strong> (entities) and <strong>edges</strong> (relationships), ideal for highly connected data where relationships are as important as the entities themselves.</p>
+                    <br/>
+                    <p><strong>Use Cases:</strong></p>
+                    <ul>
+                        <li>Supply chain &amp; logistics networks</li>
+                        <li>Fraud detection &amp; financial crime</li>
+                        <li>Social network analysis</li>
+                        <li>Knowledge graphs &amp; recommendation engines</li>
+                        <li>Impact analysis &amp; data lineage</li>
+                    </ul>
+                    <br/>
+                    <p><strong>Technologies:</strong></p>
+                    <ul>
+                        <li>Neo4j (native graph database)</li>
+                        <li>Apache TinkerPop / Gremlin</li>
+                        <li>BigQuery graph analytics (SQL-based)</li>
+                        <li>Databricks GraphFrames</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>Naming Conventions Standard</span>
+                    <span class="chevron">&#x25BC;</span>
+                </div>
+                <div class="accordion-body">
+                    <p>Consistent naming is critical for maintainability, collaboration, and automated tooling. Our standards:</p>
+                    <br/>
+                    <p><strong>Table Prefixes:</strong></p>
+                    <ul>
+                        <li><code>dim_</code> &ndash; Dimension tables</li>
+                        <li><code>fact_</code> &ndash; Fact tables</li>
+                        <li><code>hub_</code>, <code>link_</code>, <code>sat_</code> &ndash; Data Vault entities</li>
+                        <li><code>stg_</code> &ndash; Staging tables</li>
+                        <li><code>int_</code> &ndash; Intermediate/transform tables</li>
+                        <li><code>mart_</code> &ndash; Mart/presentation tables</li>
+                    </ul>
+                    <br/>
+                    <p><strong>Column Suffixes:</strong></p>
+                    <ul>
+                        <li><code>_key</code>, <code>_sk</code> &ndash; Surrogate keys</li>
+                        <li><code>_nk</code> &ndash; Natural keys</li>
+                        <li><code>_date</code> &ndash; Date columns</li>
+                        <li><code>_at</code>, <code>_ts</code> &ndash; Timestamps</li>
+                        <li><code>_flag</code>, <code>_ind</code> &ndash; Boolean indicators</li>
+                        <li><code>_amt</code> &ndash; Monetary amounts</li>
+                        <li><code>_qty</code> &ndash; Quantities</li>
+                        <li><code>_cnt</code> &ndash; Counts</li>
+                    </ul>
+                    <br/>
+                    <p><strong>Required Audit Columns (all tables):</strong> <code>created_at</code>, <code>updated_at</code>, <code>created_by</code>, <code>updated_by</code>, <code>is_deleted</code></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Technical Guides -->
+        <section class="section">
+            <h2 class="section-title">&#x1F4DA; Technical Guides</h2>
+            <div id="guidesLibrary">
+                <div class="knowledge-grid">
+                    <div class="knowledge-card">
+                        <div class="knowledge-card-icon">&#x1F4CA;</div>
+                        <div class="knowledge-card-body">
+                            <h3>BigQuery Best Practices for Data Modeling</h3>
+                            <p>Partitioning, clustering, nested/repeated fields, and cost optimization strategies for BigQuery data models.</p>
+                            <div class="meta">
+                                <span class="tag tag-platform">BigQuery</span>
+                                <span class="tag tag-practice">Best Practice</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="knowledge-card">
+                        <div class="knowledge-card-icon">&#x2744;&#xFE0F;</div>
+                        <div class="knowledge-card-body">
+                            <h3>Snowflake Modeling Guide</h3>
+                            <p>Zero-copy cloning, time travel, micro-partitions, and Snowflake-specific optimization techniques.</p>
+                            <div class="meta">
+                                <span class="tag tag-platform">Snowflake</span>
+                                <span class="tag tag-practice">Best Practice</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="knowledge-card">
+                        <div class="knowledge-card-icon">&#x1F527;</div>
+                        <div class="knowledge-card-body">
+                            <h3>dbt Modeling Patterns</h3>
+                            <p>Staging conventions, mart patterns, incremental strategies, and testing best practices with dbt.</p>
+                            <div class="meta">
+                                <span class="tag tag-platform">dbt</span>
+                                <span class="tag tag-concept">Patterns</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="knowledge-card">
+                        <div class="knowledge-card-icon">&#x1F50D;</div>
+                        <div class="knowledge-card-body">
+                            <h3>Data Quality Testing Guide</h3>
+                            <p>Strategies for testing data models including uniqueness, referential integrity, freshness, and volume checks.</p>
+                            <div class="meta">
+                                <span class="tag tag-practice">Testing</span>
+                                <span class="tag tag-concept">Quality</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="knowledge-card">
+                        <div class="knowledge-card-icon">&#x1F4DD;</div>
+                        <div class="knowledge-card-body">
+                            <h3>Model Documentation Standard</h3>
+                            <p>How to write effective data dictionaries, ERD documentation, and design decision records.</p>
+                            <div class="meta">
+                                <span class="tag tag-practice">Documentation</span>
+                                <span class="tag tag-concept">Standards</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="knowledge-card">
+                        <div class="knowledge-card-icon">&#x1F504;</div>
+                        <div class="knowledge-card-body">
+                            <h3>Schema Migration Playbook</h3>
+                            <p>Safe practices for evolving data model schemas in production: additive changes, blue-green migrations, and rollback strategies.</p>
+                            <div class="meta">
+                                <span class="tag tag-practice">Migration</span>
+                                <span class="tag tag-concept">DevOps</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <footer class="portal-footer">
+        Data Model Competency &ndash; Center of Excellence &bull; Data &amp; Insights Team &bull; Ascendion &bull; &copy; 2026
+    </footer>
+
+    <script type="text/javascript">
+        function toggleAccordion(header) {
+            var body = header.nextElementSibling;
+            var isOpen = body.classList.contains('open');
+
+            // Close all
+            document.querySelectorAll('.accordion-body').forEach(function(b) { b.classList.remove('open'); });
+            document.querySelectorAll('.accordion-header').forEach(function(h) { h.classList.remove('open'); });
+
+            if (!isOpen) {
+                body.classList.add('open');
+                header.classList.add('open');
+            }
+        }
+    </script>
+
+</body>
+</html>

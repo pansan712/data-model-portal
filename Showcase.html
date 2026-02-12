@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data Model Competency - Showcase</title>
+    <style>
+        :root {
+            --primary: #1e3a5f; --primary-light: #2d5a87; --primary-lighter: #3d7ab5;
+            --accent: #0078d4; --success: #28a745; --warning: #ffc107;
+            --bg: #f5f7fa; --bg-card: #ffffff; --text: #323130;
+            --text-light: #605e5c; --text-lighter: #a19f9d; --border: #edebe9;
+            --shadow: 0 2px 8px rgba(0,0,0,0.08); --shadow-hover: 0 4px 16px rgba(0,0,0,0.12);
+            --radius: 10px; --radius-lg: 16px; --transition: all 0.25s ease;
+            --font: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; }
+
+        .portal-nav { background: var(--primary); padding: 0 40px; display: flex; align-items: center; height: 50px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+        .portal-nav .logo { color: white; font-weight: 700; font-size: 1.1em; margin-right: 40px; text-decoration: none; white-space: nowrap; }
+        .portal-nav .nav-links { display: flex; gap: 0; list-style: none; height: 100%; }
+        .portal-nav .nav-links li { height: 100%; }
+        .portal-nav .nav-links a { color: rgba(255,255,255,0.85); text-decoration: none; padding: 0 18px; font-size: 0.9em; font-weight: 500; display: flex; align-items: center; height: 100%; transition: var(--transition); border-bottom: 3px solid transparent; }
+        .portal-nav .nav-links a:hover, .portal-nav .nav-links a.active { color: white; background: rgba(255,255,255,0.1); border-bottom-color: white; }
+
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 30px; }
+
+        .page-hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white; padding: 50px 40px; position: relative; overflow: hidden;
+        }
+        .page-hero::before { content: ''; position: absolute; top: -50%; right: -20%; width: 60%; height: 200%; background: radial-gradient(ellipse, rgba(255,255,255,0.06) 0%, transparent 70%); }
+        .page-hero h1 { font-size: 2.5em; margin-bottom: 10px; position: relative; }
+        .page-hero p { font-size: 1.2em; opacity: 0.9; position: relative; }
+
+        .section { padding: 40px 0; }
+        .section-title { font-size: 1.5em; color: var(--primary); border-bottom: 3px solid var(--primary-light); padding-bottom: 10px; margin-bottom: 25px; display: flex; align-items: center; gap: 10px; }
+
+        /* Filters */
+        .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 25px; }
+        .filter-btn { padding: 6px 16px; border: 1px solid var(--border); background: var(--bg-card); border-radius: 20px; font-size: 0.85em; cursor: pointer; transition: var(--transition); font-family: var(--font); color: var(--text-light); }
+        .filter-btn:hover, .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        /* Capability Matrix */
+        .matrix-table { width: 100%; border-collapse: collapse; background: var(--bg-card); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+        .matrix-table thead { background: var(--primary); color: white; }
+        .matrix-table th { padding: 14px 16px; text-align: left; font-weight: 600; font-size: 0.9em; }
+        .matrix-table td { padding: 14px 16px; border-bottom: 1px solid var(--border); font-size: 0.9em; }
+        .matrix-table tr:hover td { background: #f8f9fa; }
+        .stars { color: #f9a825; font-size: 1.1em; letter-spacing: 1px; }
+        .maturity-bar { display: flex; gap: 3px; }
+        .maturity-dot { width: 20px; height: 8px; border-radius: 4px; background: #e0e0e0; }
+        .maturity-dot.filled { background: linear-gradient(135deg, var(--primary-light), var(--primary-lighter)); }
+
+        /* Project Gallery */
+        .project-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 25px; }
+        .project-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; transition: var(--transition); }
+        .project-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+        .project-card-header { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); color: white; padding: 20px 24px; }
+        .project-card-header h3 { font-size: 1.15em; margin-bottom: 5px; }
+        .project-card-header .meta { font-size: 0.85em; opacity: 0.85; }
+        .project-card-body { padding: 20px 24px; }
+        .project-card-body .label { font-size: 0.8em; text-transform: uppercase; color: var(--text-lighter); font-weight: 600; margin-bottom: 4px; letter-spacing: 0.5px; }
+        .project-card-body .value { font-size: 0.9em; color: var(--text); margin-bottom: 15px; line-height: 1.5; }
+        .project-card-footer { padding: 15px 24px; border-top: 1px solid var(--border); display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+        .tag { padding: 3px 10px; border-radius: 12px; font-size: 0.75em; font-weight: 600; }
+        .tag-platform { background: #e8f0fe; color: #1967d2; }
+        .tag-model { background: #fce8e6; color: #c5221f; }
+        .tag-status-active { background: #e6f4ea; color: #1e7e34; }
+        .tag-status-completed { background: #e8f0fe; color: #1967d2; }
+        .tag-industry { background: #fef7e0; color: #f9a825; }
+
+        .loading { text-align: center; padding: 40px; color: var(--text-lighter); }
+        .spinner { display: inline-block; width: 24px; height: 24px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .portal-footer { background: var(--primary); color: rgba(255,255,255,0.7); padding: 20px 40px; text-align: center; font-size: 0.85em; margin-top: 40px; }
+
+        .empty-state { text-align: center; padding: 50px 20px; color: var(--text-light); }
+        .empty-state .icon { font-size: 3em; margin-bottom: 15px; display: block; }
+
+        @media (max-width: 768px) {
+            .page-hero { padding: 30px 20px; }
+            .page-hero h1 { font-size: 1.8em; }
+            .container { padding: 0 15px; }
+            .project-gallery { grid-template-columns: 1fr; }
+            .portal-nav { padding: 0 15px; }
+            .portal-nav .nav-links a { padding: 0 10px; font-size: 0.82em; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="portal-nav">
+        <a href="Home.html" class="logo">Data Model Competency</a>
+        <ul class="nav-links">
+            <li><a href="Home.html">Home</a></li>
+            <li><a href="Showcase.html" class="active">Showcase</a></li>
+            <li><a href="Accelerators.html">Accelerators</a></li>
+            <li><a href="Knowledge.html">Knowledge</a></li>
+            <li><a href="Community.html">Community</a></li>
+            <li><a href="Metrics.html">Metrics</a></li>
+        </ul>
+    </nav>
+
+    <section class="page-hero">
+        <h1>&#x1F3AF; Showcase</h1>
+        <p>Explore our team's capabilities, browse completed projects, and discover our expertise</p>
+    </section>
+
+    <div class="container">
+
+        <!-- Capability Matrix -->
+        <section class="section">
+            <h2 class="section-title">&#x1F4CA; Capability Matrix</h2>
+            <p style="color:var(--text-light); margin-bottom:20px;">Our team's competencies across data modeling disciplines, with maturity levels and subject matter experts.</p>
+
+            <div class="filter-bar" id="capFilters">
+                <button class="filter-btn active" onclick="filterCaps('All')">All</button>
+            </div>
+
+            <div id="capabilityMatrix">
+                <div class="loading"><div class="spinner"></div><p>Loading capabilities...</p></div>
+            </div>
+        </section>
+
+        <!-- Project Gallery -->
+        <section class="section">
+            <h2 class="section-title">&#x1F3C6; Project Gallery</h2>
+            <p style="color:var(--text-light); margin-bottom:20px;">Browse our portfolio of completed data modeling projects across industries and platforms.</p>
+
+            <div class="filter-bar" id="projFilters">
+                <button class="filter-btn active" onclick="filterProjects('All')">All</button>
+            </div>
+
+            <div class="project-gallery" id="projectGallery">
+                <div class="loading"><div class="spinner"></div><p>Loading projects...</p></div>
+            </div>
+        </section>
+
+    </div>
+
+    <footer class="portal-footer">
+        Data Model Competency &ndash; Center of Excellence &bull; Data &amp; Insights Team &bull; Ascendion &bull; &copy; 2026
+    </footer>
+
+    <script type="text/javascript">
+        var SITE_URL = (typeof _spPageContextInfo !== 'undefined' && _spPageContextInfo) ? _spPageContextInfo.webAbsoluteUrl : '';
+        if (!SITE_URL) {
+            var loc = window.location.href;
+            var siteMatch = loc.match(/(https:\/\/[^/]+\/sites\/[^/]+\/[^/]+)/i);
+            if (siteMatch) SITE_URL = siteMatch[1];
+            else SITE_URL = 'https://ascendionhub.sharepoint.com/sites/DataNInsights2.0/DataModelCompetency';
+        }
+
+        var allCapabilities = [];
+        var allProjects = [];
+
+        function spGet(listName) {
+            return fetch(SITE_URL + '/_api/web/lists/getbytitle(\'' + listName + '\')/items?$top=500', {
+                headers: { 'Accept': 'application/json;odata=verbose' },
+                credentials: 'include'
+            }).then(function(r) { return r.json(); })
+              .then(function(d) { return d.d ? d.d.results : []; })
+              .catch(function() { return []; });
+        }
+
+        function renderMaturityBar(level) {
+            var html = '<div class="maturity-bar">';
+            for (var i = 1; i <= 5; i++) {
+                html += '<div class="maturity-dot' + (i <= level ? ' filled' : '') + '"></div>';
+            }
+            html += '</div>';
+            return html;
+        }
+
+        // Capabilities
+        function loadCapabilities() {
+            spGet('Capabilities').then(function(results) {
+                allCapabilities = results;
+                if (!results.length) {
+                    // Show sample data
+                    allCapabilities = [
+                        { Title: 'Dimensional Modeling (Star Schema)', Category: 'Dimensional Modeling', MaturityLevel: 5, ProjectCount: 12, Description: 'Expert in Kimball-style dimensional modeling with conformed dimensions' },
+                        { Title: 'Data Vault 2.0', Category: 'Data Vault', MaturityLevel: 4, ProjectCount: 6, Description: 'Hub-Link-Satellite modeling for agile data warehousing' },
+                        { Title: 'Graph Data Modeling', Category: 'Graph Models', MaturityLevel: 3, ProjectCount: 3, Description: 'Neo4j and property graph modeling for connected data' },
+                        { Title: 'Activity Schema', Category: 'Streaming', MaturityLevel: 3, ProjectCount: 2, Description: 'Event-driven analytics patterns for modern data stacks' },
+                        { Title: 'Semantic Layer Design', Category: 'Semantic Layer', MaturityLevel: 4, ProjectCount: 5, Description: 'Business-friendly semantic models and metrics layers' },
+                        { Title: 'Real-time Data Modeling', Category: 'Real-time', MaturityLevel: 2, ProjectCount: 1, Description: 'Streaming and real-time data architecture patterns' }
+                    ];
+                }
+                buildCapFilters();
+                renderCapabilities(allCapabilities);
+            });
+        }
+
+        function buildCapFilters() {
+            var cats = ['All'];
+            allCapabilities.forEach(function(c) {
+                if (c.Category && cats.indexOf(c.Category) === -1) cats.push(c.Category);
+            });
+            var html = '';
+            cats.forEach(function(c) {
+                html += '<button class="filter-btn' + (c === 'All' ? ' active' : '') + '" onclick="filterCaps(\'' + c + '\')">' + c + '</button>';
+            });
+            document.getElementById('capFilters').innerHTML = html;
+        }
+
+        function filterCaps(cat) {
+            document.querySelectorAll('#capFilters .filter-btn').forEach(function(b) { b.classList.remove('active'); });
+            event.target.classList.add('active');
+            var filtered = cat === 'All' ? allCapabilities : allCapabilities.filter(function(c) { return c.Category === cat; });
+            renderCapabilities(filtered);
+        }
+
+        function renderCapabilities(caps) {
+            var html = '<table class="matrix-table"><thead><tr><th>Capability</th><th>Category</th><th>Maturity</th><th>Projects</th></tr></thead><tbody>';
+            caps.forEach(function(c) {
+                html += '<tr><td><strong>' + (c.Title || '') + '</strong><br><span style="font-size:0.85em;color:var(--text-light);">' + (c.Description || '') + '</span></td>' +
+                    '<td>' + (c.Category || '') + '</td>' +
+                    '<td>' + renderMaturityBar(c.MaturityLevel || 0) + '</td>' +
+                    '<td style="text-align:center;font-weight:600;">' + (c.ProjectCount || 0) + '</td></tr>';
+            });
+            html += '</tbody></table>';
+            document.getElementById('capabilityMatrix').innerHTML = html;
+        }
+
+        // Projects
+        function loadProjects() {
+            spGet('Projects').then(function(results) {
+                allProjects = results;
+                if (!results.length) {
+                    allProjects = [
+                        { Title: 'Healthcare Analytics Platform', Client: 'Major Health System', Industry: 'Healthcare', Platform: 'BigQuery', ModelType: 'Star Schema', Status: 'Completed', BusinessProblem: 'Needed unified patient analytics across 15 facilities', Solution: 'Kimball star schema with conformed dimensions for patient, provider, and encounter', Outcomes: '40% faster reporting, unified view across facilities' },
+                        { Title: 'Retail Customer 360', Client: 'National Retailer', Industry: 'Retail', Platform: 'Snowflake', ModelType: 'Data Vault', Status: 'Completed', BusinessProblem: 'Siloed customer data across 8 source systems', Solution: 'Data Vault 2.0 with business vault and information delivery marts', Outcomes: '360-degree customer view, 60% reduction in data latency' },
+                        { Title: 'Supply Chain Knowledge Graph', Client: 'Manufacturing Corp', Industry: 'Manufacturing', Platform: 'Databricks', ModelType: 'Graph', Status: 'Active', BusinessProblem: 'Complex multi-tier supplier relationships with risk assessment needs', Solution: 'Neo4j graph model integrated with Databricks for analytics', Outcomes: 'Real-time supply chain risk scoring' },
+                        { Title: 'FinTech Transaction Analytics', Client: 'Digital Bank', Industry: 'Finance', Platform: 'BigQuery', ModelType: 'Activity Schema', Status: 'Completed', BusinessProblem: 'Real-time transaction monitoring and fraud detection', Solution: 'Activity schema with event streams for transaction patterns', Outcomes: '5x improvement in fraud detection speed' }
+                    ];
+                }
+                buildProjFilters();
+                renderProjects(allProjects);
+            });
+        }
+
+        function buildProjFilters() {
+            var statuses = ['All'];
+            allProjects.forEach(function(p) {
+                if (p.Status && statuses.indexOf(p.Status) === -1) statuses.push(p.Status);
+                if (p.Platform && statuses.indexOf(p.Platform) === -1) statuses.push(p.Platform);
+            });
+            var html = '';
+            statuses.forEach(function(s) {
+                html += '<button class="filter-btn' + (s === 'All' ? ' active' : '') + '" onclick="filterProjects(\'' + s + '\')">' + s + '</button>';
+            });
+            document.getElementById('projFilters').innerHTML = html;
+        }
+
+        function filterProjects(val) {
+            document.querySelectorAll('#projFilters .filter-btn').forEach(function(b) { b.classList.remove('active'); });
+            event.target.classList.add('active');
+            var filtered = val === 'All' ? allProjects : allProjects.filter(function(p) {
+                return p.Status === val || p.Platform === val || p.Industry === val;
+            });
+            renderProjects(filtered);
+        }
+
+        function renderProjects(projects) {
+            if (!projects.length) {
+                document.getElementById('projectGallery').innerHTML = '<div class="empty-state"><span class="icon">&#x1F4C2;</span><p>No projects match the current filter.</p></div>';
+                return;
+            }
+            var html = '';
+            projects.forEach(function(p) {
+                var statusClass = p.Status === 'Active' ? 'tag-status-active' : 'tag-status-completed';
+                html += '<div class="project-card">' +
+                    '<div class="project-card-header"><h3>' + (p.Title || '') + '</h3>' +
+                    '<div class="meta">' + (p.Client || '') + ' &bull; ' + (p.Industry || '') + '</div></div>' +
+                    '<div class="project-card-body">' +
+                    '<div class="label">Business Problem</div><div class="value">' + (p.BusinessProblem || '') + '</div>' +
+                    '<div class="label">Solution</div><div class="value">' + (p.Solution || '') + '</div>' +
+                    '<div class="label">Outcomes</div><div class="value">' + (p.Outcomes || '') + '</div></div>' +
+                    '<div class="project-card-footer">' +
+                    '<span class="tag tag-platform">' + (p.Platform || '') + '</span>' +
+                    '<span class="tag tag-model">' + (p.ModelType || '') + '</span>' +
+                    '<span class="tag ' + statusClass + '">' + (p.Status || '') + '</span></div></div>';
+            });
+            document.getElementById('projectGallery').innerHTML = html;
+        }
+
+        try { loadCapabilities(); loadProjects(); } catch(e) { console.log('API load skipped:', e); }
+    </script>
+
+</body>
+</html>

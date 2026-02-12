@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data Model Competency - Accelerators</title>
+    <style>
+        :root {
+            --primary: #1e3a5f; --primary-light: #2d5a87; --primary-lighter: #3d7ab5;
+            --accent: #0078d4; --success: #28a745; --warning: #ffc107;
+            --bg: #f5f7fa; --bg-card: #ffffff; --text: #323130;
+            --text-light: #605e5c; --text-lighter: #a19f9d; --border: #edebe9;
+            --shadow: 0 2px 8px rgba(0,0,0,0.08); --shadow-hover: 0 4px 16px rgba(0,0,0,0.12);
+            --radius: 10px; --radius-lg: 16px; --transition: all 0.25s ease;
+            --font: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; }
+        .portal-nav { background: var(--primary); padding: 0 40px; display: flex; align-items: center; height: 50px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+        .portal-nav .logo { color: white; font-weight: 700; font-size: 1.1em; margin-right: 40px; text-decoration: none; white-space: nowrap; }
+        .portal-nav .nav-links { display: flex; gap: 0; list-style: none; height: 100%; }
+        .portal-nav .nav-links li { height: 100%; }
+        .portal-nav .nav-links a { color: rgba(255,255,255,0.85); text-decoration: none; padding: 0 18px; font-size: 0.9em; font-weight: 500; display: flex; align-items: center; height: 100%; transition: var(--transition); border-bottom: 3px solid transparent; }
+        .portal-nav .nav-links a:hover, .portal-nav .nav-links a.active { color: white; background: rgba(255,255,255,0.1); border-bottom-color: white; }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 30px; }
+        .page-hero { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); color: white; padding: 50px 40px; position: relative; overflow: hidden; }
+        .page-hero::before { content: ''; position: absolute; top: -50%; right: -20%; width: 60%; height: 200%; background: radial-gradient(ellipse, rgba(255,255,255,0.06) 0%, transparent 70%); }
+        .page-hero h1 { font-size: 2.5em; margin-bottom: 10px; position: relative; }
+        .page-hero p { font-size: 1.2em; opacity: 0.9; position: relative; }
+        .section { padding: 40px 0; }
+        .section-title { font-size: 1.5em; color: var(--primary); border-bottom: 3px solid var(--primary-light); padding-bottom: 10px; margin-bottom: 25px; display: flex; align-items: center; gap: 10px; }
+
+        /* AI Tool Cards */
+        .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 20px; }
+        .tool-card {
+            padding: 30px; border-radius: var(--radius-lg); color: white; position: relative; overflow: hidden; min-height: 200px;
+            display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .tool-card::before { content: ''; position: absolute; top: -30%; right: -20%; width: 50%; height: 160%; background: radial-gradient(ellipse, rgba(255,255,255,0.12) 0%, transparent 70%); }
+        .tool-card.gradient-purple { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .tool-card.gradient-green { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
+        .tool-card.gradient-orange { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .tool-card.gradient-blue { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .tool-card h3 { font-size: 1.2em; margin-bottom: 10px; position: relative; }
+        .tool-card p { opacity: 0.92; font-size: 0.95em; margin-bottom: 15px; position: relative; }
+        .tool-badge { display: inline-block; background: rgba(255,255,255,0.2); padding: 4px 14px; border-radius: 15px; font-size: 0.82em; position: relative; }
+
+        /* Pattern Cards */
+        .pattern-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
+        .pattern-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: var(--transition); }
+        .pattern-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+        .pattern-card-header { padding: 18px 22px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .pattern-card-header h3 { font-size: 1.05em; color: var(--primary); }
+        .pattern-card-body { padding: 18px 22px; }
+        .pattern-card-body p { color: var(--text-light); font-size: 0.9em; margin-bottom: 12px; }
+        .pattern-meta { display: flex; gap: 6px; flex-wrap: wrap; }
+        .tag { padding: 3px 10px; border-radius: 12px; font-size: 0.75em; font-weight: 600; }
+        .tag-cat { background: #e8f0fe; color: #1967d2; }
+        .tag-platform { background: #e6f4ea; color: #1e7e34; }
+        .tag-complexity-simple { background: #e6f4ea; color: #1e7e34; }
+        .tag-complexity-medium { background: #fef7e0; color: #e37400; }
+        .tag-complexity-complex { background: #fce8e6; color: #c5221f; }
+
+        /* Template Section */
+        .template-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .template-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 25px; transition: var(--transition); }
+        .template-card:hover { box-shadow: var(--shadow); }
+        .template-card h3 { color: var(--primary); margin-bottom: 10px; font-size: 1.05em; }
+        .template-card p { color: var(--text-light); font-size: 0.9em; margin-bottom: 12px; }
+        .template-card ul { list-style: none; padding: 0; }
+        .template-card ul li { padding: 4px 0; color: var(--text-light); font-size: 0.88em; }
+        .template-card ul li::before { content: '\2022 '; color: var(--primary-light); }
+        .template-link { color: var(--primary-light); font-weight: 600; font-size: 0.9em; text-decoration: none; display: inline-block; margin-top: 10px; }
+        .template-link:hover { color: var(--primary); }
+
+        .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 25px; }
+        .filter-btn { padding: 6px 16px; border: 1px solid var(--border); background: var(--bg-card); border-radius: 20px; font-size: 0.85em; cursor: pointer; transition: var(--transition); font-family: var(--font); color: var(--text-light); }
+        .filter-btn:hover, .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        .loading { text-align: center; padding: 40px; color: var(--text-lighter); }
+        .spinner { display: inline-block; width: 24px; height: 24px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .portal-footer { background: var(--primary); color: rgba(255,255,255,0.7); padding: 20px 40px; text-align: center; font-size: 0.85em; margin-top: 40px; }
+
+        @media (max-width: 768px) {
+            .page-hero { padding: 30px 20px; } .page-hero h1 { font-size: 1.8em; }
+            .container { padding: 0 15px; } .pattern-grid { grid-template-columns: 1fr; }
+            .portal-nav { padding: 0 15px; } .portal-nav .nav-links a { padding: 0 10px; font-size: 0.82em; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="portal-nav">
+        <a href="Home.html" class="logo">Data Model Competency</a>
+        <ul class="nav-links">
+            <li><a href="Home.html">Home</a></li>
+            <li><a href="Showcase.html">Showcase</a></li>
+            <li><a href="Accelerators.html" class="active">Accelerators</a></li>
+            <li><a href="Knowledge.html">Knowledge</a></li>
+            <li><a href="Community.html">Community</a></li>
+            <li><a href="Metrics.html">Metrics</a></li>
+        </ul>
+    </nav>
+
+    <section class="page-hero">
+        <h1>&#x26A1; Accelerators</h1>
+        <p>Speed up your data modeling with patterns, templates, and AI-powered tools</p>
+    </section>
+
+    <div class="container">
+
+        <!-- AI Tools -->
+        <section class="section">
+            <h2 class="section-title">&#x1F916; AI-Powered Tools</h2>
+            <div class="tools-grid">
+                <div class="tool-card gradient-purple">
+                    <div>
+                        <h3>&#x1F916; AI Model Generator</h3>
+                        <p>Generate complete data models from natural language descriptions. Supports Star Schema, Data Vault, and Activity Schema patterns.</p>
+                    </div>
+                    <span class="tool-badge">Coming Soon &ndash; Phase 2</span>
+                </div>
+                <div class="tool-card gradient-green">
+                    <div>
+                        <h3>&#x2705; Naming Convention Validator</h3>
+                        <p>Validate DDL against organizational naming standards. Get instant feedback with auto-fix suggestions.</p>
+                    </div>
+                    <span class="tool-badge">Coming Soon &ndash; Phase 2</span>
+                </div>
+                <div class="tool-card gradient-orange">
+                    <div>
+                        <h3>&#x1F4C4; Auto Documentation</h3>
+                        <p>Automatically generate data dictionaries and ERD diagrams from your DDL scripts.</p>
+                    </div>
+                    <span class="tool-badge">Coming Soon &ndash; Phase 2</span>
+                </div>
+                <div class="tool-card gradient-blue">
+                    <div>
+                        <h3>&#x1F50D; Pattern Finder</h3>
+                        <p>Describe your requirements and get matched with the best modeling pattern for your use case.</p>
+                    </div>
+                    <span class="tool-badge">Coming Soon &ndash; Phase 2</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pattern Library -->
+        <section class="section">
+            <h2 class="section-title">&#x1F4D0; Pattern Library</h2>
+            <p style="color:var(--text-light); margin-bottom:20px;">Browse reusable data modeling patterns with templates and documentation.</p>
+
+            <div class="filter-bar" id="patternFilters">
+                <button class="filter-btn active" onclick="filterPatterns('All')">All</button>
+            </div>
+
+            <div class="pattern-grid" id="patternGrid">
+                <div class="loading"><div class="spinner"></div><p>Loading patterns...</p></div>
+            </div>
+        </section>
+
+        <!-- Templates -->
+        <section class="section">
+            <h2 class="section-title">&#x1F4C1; Templates &amp; Resources</h2>
+            <div class="template-grid">
+                <div class="template-card">
+                    <h3>&#x1F4C4; DDL Templates</h3>
+                    <p>Platform-specific DDL templates for common patterns</p>
+                    <ul>
+                        <li>BigQuery Templates</li>
+                        <li>Snowflake Templates</li>
+                        <li>Databricks Templates</li>
+                        <li>Azure Synapse Templates</li>
+                    </ul>
+                    <a href="#" class="template-link">Browse Templates &rarr;</a>
+                </div>
+                <div class="template-card">
+                    <h3>&#x1F527; dbt Model Templates</h3>
+                    <p>Reusable dbt model templates for staging and marts</p>
+                    <ul>
+                        <li>Staging Model Templates</li>
+                        <li>Mart Model Templates</li>
+                        <li>Test Configuration Templates</li>
+                        <li>Schema YAML Templates</li>
+                    </ul>
+                    <a href="#" class="template-link">Browse dbt Templates &rarr;</a>
+                </div>
+                <div class="template-card">
+                    <h3>&#x1F4DD; Documentation Templates</h3>
+                    <p>Templates for project and model documentation</p>
+                    <ul>
+                        <li>Data Dictionary Template</li>
+                        <li>ERD Documentation Template</li>
+                        <li>Design Decision Record</li>
+                        <li>Model Review Checklist</li>
+                    </ul>
+                    <a href="#" class="template-link">Browse Docs Templates &rarr;</a>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <footer class="portal-footer">
+        Data Model Competency &ndash; Center of Excellence &bull; Data &amp; Insights Team &bull; Ascendion &bull; &copy; 2026
+    </footer>
+
+    <script type="text/javascript">
+        var SITE_URL = (typeof _spPageContextInfo !== 'undefined' && _spPageContextInfo) ? _spPageContextInfo.webAbsoluteUrl : '';
+        if (!SITE_URL) {
+            var loc = window.location.href;
+            var siteMatch = loc.match(/(https:\/\/[^/]+\/sites\/[^/]+\/[^/]+)/i);
+            if (siteMatch) SITE_URL = siteMatch[1];
+            else SITE_URL = 'https://ascendionhub.sharepoint.com/sites/DataNInsights2.0/DataModelCompetency';
+        }
+
+        var allPatterns = [];
+
+        function spGet(listName) {
+            return fetch(SITE_URL + '/_api/web/lists/getbytitle(\'' + listName + '\')/items?$top=500', {
+                headers: { 'Accept': 'application/json;odata=verbose' },
+                credentials: 'include'
+            }).then(function(r) { return r.json(); })
+              .then(function(d) { return d.d ? d.d.results : []; })
+              .catch(function() { return []; });
+        }
+
+        function loadPatterns() {
+            spGet('Patterns').then(function(results) {
+                allPatterns = results;
+                if (!results.length) {
+                    allPatterns = [
+                        { Title: 'SCD Type 2 Dimension', PatternID: 'scd-type-2', Category: 'Dimensional', Description: 'Slowly changing dimension with full history tracking. Maintains effective date ranges for point-in-time analysis.', Complexity: 'Medium', Platforms: 'BigQuery, Snowflake, Databricks' },
+                        { Title: 'Star Schema Foundation', PatternID: 'star-schema', Category: 'Dimensional', Description: 'Classic Kimball star schema with conformed dimensions and fact tables. Foundation for analytical data warehouses.', Complexity: 'Simple', Platforms: 'All' },
+                        { Title: 'Data Vault Hub-Link-Satellite', PatternID: 'dv-hls', Category: 'Data Vault', Description: 'Core Data Vault 2.0 pattern with hash keys, load timestamps, and record source tracking.', Complexity: 'Complex', Platforms: 'Snowflake, Databricks' },
+                        { Title: 'Activity Schema', PatternID: 'activity-schema', Category: 'Streaming', Description: 'Event-driven analytics pattern modeling all business activities as a single wide stream.', Complexity: 'Medium', Platforms: 'BigQuery, Snowflake' },
+                        { Title: 'Bridge Table', PatternID: 'bridge-table', Category: 'Dimensional', Description: 'Resolve many-to-many relationships between dimension and fact tables.', Complexity: 'Simple', Platforms: 'All' },
+                        { Title: 'Fact Snapshot', PatternID: 'fact-snapshot', Category: 'Dimensional', Description: 'Periodic snapshot of accumulating metrics. Ideal for balance-type measurements.', Complexity: 'Medium', Platforms: 'All' },
+                        { Title: 'Property Graph Model', PatternID: 'property-graph', Category: 'Graph', Description: 'Node-edge model for connected data scenarios like supply chain, social networks, and fraud detection.', Complexity: 'Complex', Platforms: 'Databricks, BigQuery' },
+                        { Title: 'Semantic Metrics Layer', PatternID: 'semantic-layer', Category: 'Semantic', Description: 'Business-friendly abstraction layer defining metrics, dimensions, and their relationships.', Complexity: 'Medium', Platforms: 'All' }
+                    ];
+                }
+                buildPatternFilters();
+                renderPatterns(allPatterns);
+            });
+        }
+
+        function buildPatternFilters() {
+            var cats = ['All'];
+            allPatterns.forEach(function(p) {
+                if (p.Category && cats.indexOf(p.Category) === -1) cats.push(p.Category);
+            });
+            var html = '';
+            cats.forEach(function(c) {
+                html += '<button class="filter-btn' + (c === 'All' ? ' active' : '') + '" onclick="filterPatterns(\'' + c + '\')">' + c + '</button>';
+            });
+            document.getElementById('patternFilters').innerHTML = html;
+        }
+
+        function filterPatterns(cat) {
+            document.querySelectorAll('#patternFilters .filter-btn').forEach(function(b) { b.classList.remove('active'); });
+            event.target.classList.add('active');
+            var filtered = cat === 'All' ? allPatterns : allPatterns.filter(function(p) { return p.Category === cat; });
+            renderPatterns(filtered);
+        }
+
+        function renderPatterns(patterns) {
+            var html = '';
+            patterns.forEach(function(p) {
+                var complexityClass = 'tag-complexity-' + (p.Complexity || 'medium').toLowerCase();
+                html += '<div class="pattern-card">' +
+                    '<div class="pattern-card-header"><h3>' + (p.Title || '') + '</h3><span class="tag ' + complexityClass + '">' + (p.Complexity || '') + '</span></div>' +
+                    '<div class="pattern-card-body"><p>' + (p.Description || '') + '</p>' +
+                    '<div class="pattern-meta"><span class="tag tag-cat">' + (p.Category || '') + '</span>' +
+                    '<span class="tag tag-platform">' + (p.Platforms || 'All') + '</span></div></div></div>';
+            });
+            document.getElementById('patternGrid').innerHTML = html;
+        }
+
+        try { loadPatterns(); } catch(e) { console.log('API load skipped:', e); }
+    </script>
+
+</body>
+</html>
